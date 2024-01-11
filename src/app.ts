@@ -5,8 +5,7 @@ import * as fs from 'fs';
 import inquirer from 'inquirer';
 import * as dotenv from 'dotenv';
 import * as log from './console-logger';
-import { pipeline } from './middleware.example';
-// import { MwDispatcher, Next } from './middleware2';
+import { pipeline } from './middleware/middleware.example';
 import { Middleware } from '../src/poppins/middleware';
 import { type NextFn } from './poppins/types';
 
@@ -35,9 +34,9 @@ async function main() {
     const middleware = opts.middleware;
     if (middleware) {
         log.info('Middleware demo');
-        // await middlewareDemo();
-        // await middlewareThrowback();
-        await middlewarePoppins();
+        await middlewareDemo();
+        
+        // await middlewarePoppins();
         // => { foobar: "baz", another: 123 }
     }
 }
@@ -110,13 +109,33 @@ async function middlewareDemo() {
     // type Context = { foobar: string, another: number };
 
     const engine = pipeline<Context>(async (ctx, next) => {
-        ctx.foobar = 'baz';
+        log.debug('FN: 1');
+        ctx.fuk = 'you';
         await next();
+        log.debug('FN: 1 AFTER');
     });
 
     engine.use(async (ctx, next) => {
+        log.debug('FN: 2');
         ctx.another = 123;
         await next();
+        log.debug('FN: 2 AFTER');
+    });
+
+    engine.use(async (ctx, next) => {
+        log.debug('FN: 3');
+        ctx.foo = "bar";
+        // throw new Error('Something went wrong');
+        await next();
+        log.debug('FN: 3 AFTER');
+    });
+    
+    engine.use(async (ctx, next) => {
+        log.debug('FN: 4');
+        ctx.fiz = "baz";
+        await new Promise((res) => setTimeout(res, 5000));
+        await next();
+        log.debug('FN: 4 AFTER');
     });
 
     await (async () => {
@@ -124,9 +143,13 @@ async function middlewareDemo() {
             foobar: '',
             another: 0,
         };
+        log.debug('CALLBACK BEFORE');
         await engine.execute(context);
         log.info(JSON.stringify(context));
-    })();
+        log.debug('CALLBACK AFTER');
+    })().catch((error)=>{
+        log.error(error);
+    });
 }
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

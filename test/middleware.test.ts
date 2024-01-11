@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 
-import { pipeline } from '../src/middleware.example';
+import { pipeline } from '../src/middleware/middleware.example';
 
 type TestContext = Record<string, any>;
 
