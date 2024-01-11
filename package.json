@@ -7,13 +7,15 @@
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "figlet": "^1.5.2",
-    "inquirer": "^9.1.4"
+    "inquirer": "^9.1.4",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/clear": "^0.1.2",
     "@types/figlet": "^1.5.5",
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.18",
+    "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "eslint": "^8.33.0",
     "eslint-config-prettier": "^8.6.0",
@@ -30,7 +32,7 @@
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
     "prettier": "prettier --write src test",
-    "test": "vitest --no-watch",
+    "test": "vitest --no-watch --reporter verbose",
     "test:watch": "vitest -w",
     "start": "vite-node src/app.ts --",
     "start:watch": "vite-node -w src/app.ts --",
